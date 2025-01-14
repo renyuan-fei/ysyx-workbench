@@ -5,7 +5,7 @@ V_SOURCE = $(wildcard ./vsrc/*.v)
 
 # 自动查找二进制文件和 VCD 文件
 BINARY_FILE = $(shell find obj_dir -type f -executable | head -n 1)
-VCD_FILE = $(wildcard obj_dir/*.vcd)
+VCD_FILE = $(wildcard *.vcd)
 
 # 默认目标
 all:
