@@ -1,14 +1,16 @@
+BUILD_DIR=build
+
 # 编译选项
 FLAG = -Wall --trace --exe --build --cc
 CPP_SOURCE = $(wildcard ./csrc/*.cpp)
 V_SOURCE = $(wildcard ./vsrc/*.v)
 
 # 自动查找二进制文件和 VCD 文件
-BINARY_FILE = $(shell find obj_dir -type f -executable | head -n 1)
-VCD_FILE = $(wildcard *.vcd)
+BINARY_FILE = $(shell find ./build/obj_dir -type f -executable | head -n 1)
+VCD_FILE = $(wildcard ./build/*.vcd)
 
 # 默认目标
-all:
+all: build
 	@echo "Building simulation..."
 	@verilator --cc $(V_SOURCE)
 	@verilator $(FLAG) $(V_SOURCE) $(CPP_SOURCE)
@@ -32,7 +34,7 @@ endif
 
 clean:
 	@echo "Cleaning build files..."
-	@rm -rf obj_dir
+	@rm -rf build
 
 # 引入父目录的规则
 include ../Makefile
