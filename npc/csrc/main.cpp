@@ -1,32 +1,27 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <verilated.h>
-#include "verilated_vcd_c.h"
+#include <nvboard.h>
 #include "../obj_dir/Vtop.h"
 
-#define MAX_TIME 20
-vluint64_t sim_time = 0;
+static TOP_NAME dut;
+
+void nvboard_bind_all_pins(TOP_NAME* top);
+
 
 int main(int argc, const char** argv) {
-  Vtop *vtop = new Vtop;
-  Verilated::traceEverOn(true);
-  VerilatedVcdC *m_trace = new VerilatedVcdC;
-  vtop->trace(m_trace, 5);
-  m_trace->open("waveformd.vcd");
-  while (sim_time<MAX_TIME)
+
+  // bindk all pins
+  nvboard_bind_all_pins(&dut);
+  nvboard_init();
+
+  while (1)
   {
     int a = rand() & 1;
     int b = rand() & 1;
-    vtop->a = a;
-    vtop->b = b;
-    vtop->eval();
-    printf("a = %d, b = %d, f = %d\n", a, b, vtop->f);
-    assert(vtop->f == (a ^ b));
-    m_trace->dump(sim_time);
-    sim_time++;
+    dut.a = a;
+    dut.b = b;
+    dut.eval();
+    printf("a = %d, b = %d, f = %d\n", a, b, dut.f);
+
+    nvboard_update();
   }
-  m_trace->close();
-  delete vtop;
-  exit(EXIT_SUCCESS);
+  // nvboard_quit();
 }
